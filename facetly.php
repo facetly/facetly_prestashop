@@ -200,28 +200,28 @@ class Facetly extends Module{
 
 					<label>'.$this->l('Consumer Key').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_consumer_key" value="'.Configuration::get('facetly_consumer_key').'" size="60" /> ex: qhduafdh
+						<input type="text" name="facetly_consumer_key" value="'.Configuration::get('facetly_consumer_key').'" size="40" /> ex: qhduafdh
 					</div>
 					
 
 					<label>'.$this->l('Consumer Secret').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_consumer_secret" value="'.Configuration::get('facetly_consumer_secret').'" size="60" /> ex: q5yvmddqntukobeoszi6zuqmwvy9wwsv
+						<input type="text" name="facetly_consumer_secret" value="'.Configuration::get('facetly_consumer_secret').'" size="40" /> ex: q5yvmddqntukobeoszi6zuqmwvy9wwsv
 					</div>
 
 					<label>'.$this->l('Server Name').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_server_name" value="'.Configuration::get('facetly_server_name').'" size="60" /> ex: http://sg1.facetly.com/1
+						<input type="text" name="facetly_server_name" value="'.Configuration::get('facetly_server_name').'" size="40" /> ex: http://sg1.facetly.com/1
 					</div>
 
 					<label>'.$this->l('Search Limit Setting').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_search_limit" value="'.Configuration::get('facetly_search_limit').'" size="60" /> ex: 5
+						<input type="text" name="facetly_search_limit" value="'.Configuration::get('facetly_search_limit').'" size="40" /> ex: 5
 					</div>
 					
 					<label>'.$this->l('Additional variable').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_additional_variable" value="'.Configuration::get('facetly_additional_variable').'" size="60" /> ex: _op[category]=or
+						<input type="text" name="facetly_additional_variable" value="'.Configuration::get('facetly_additional_variable').'" size="40" /> ex: _op[category]=or
 					</div>
 					
 					
