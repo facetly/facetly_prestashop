@@ -52,25 +52,6 @@ class Facetly extends Module{
 		'))
 			return false;
 		
-
-		/* 
-		if (!Db::getInstance()->Execute('
-		CREATE TABLE `'._DB_PREFIX_.'facetly_add_product` (
-		`id_add` int(10) unsigned NOT NULL auto_increment,
-		`id_product` varchar(255) NOT NULL,
-		PRIMARY KEY (`id_temp`))
-		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
-			return false;
-
-		if (!Db::getInstance()->Execute('
-		CREATE TABLE `'._DB_PREFIX_.'facetly_del_product` (
-		`id_del` int(10) unsigned NOT NULL auto_increment,
-		`id_product` varchar(255) NOT NULL,
-		PRIMARY KEY (`id_del`))
-		ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8'))
-			return false;
-			
-		*/
 		return true;
 		
 	}
@@ -79,8 +60,6 @@ class Facetly extends Module{
 	{
 		if (!parent::uninstall())
 			return false;
-		//return (Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'facetly_add_product`') AND
-		//		Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'facetly_del_product`'));
 		return (Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'facetly_add_product`')AND
 				Db::getInstance()->Execute('DROP TABLE `'._DB_PREFIX_.'facetly_del_product`'));
 	}
@@ -94,14 +73,12 @@ class Facetly extends Module{
 			Configuration::updateValue('facetly_server_name', Tools::getValue('facetly_server_name'));
 			Configuration::updateValue('facetly_search_limit', Tools::getValue('facetly_search_limit'));
 			Configuration::updateValue('facetly_additional_variable', Tools::getValue('facetly_additional_variable'));
-			//Configuration::updateValue('facetly_override_search', Tools::getValue('facetly_override_search'));
 			$this->_html .= '<div class="conf">
 								Configuration Saved
 							</div>';
 		}	
 			
 		if (Tools::isSubmit('submitTemplate')){		
-			//require_once("facetly_function.php");
 			
 			$facetly_page_template = Tools::getValue('facetly_page_template');
 			$facetly_search_template = Tools::getValue('facetly_search_template');
@@ -112,7 +89,6 @@ class Facetly extends Module{
 		}
 		
 		if (Tools::isSubmit('submitField')){		
-			//require_once("facetly_function.php");
 			$facetly_map = facetly_map();
 			if(!empty($facetly_map)){
 				$field = $facetly_map->field;
@@ -154,7 +130,7 @@ class Facetly extends Module{
 		else if($_GET['page'] != NULL){
 			$this->_html .= '<link rel="stylesheet" href="'.facetly_base_uri().'modules/facetly/css/progressBar.css">';
 			$max_id = Configuration::get('facetly_max_id');
-			$limit = 15; //500
+			$limit = 50;
 			$max_page = ceil($max_id/$limit);
 			$page = $_GET['page'];
 			$tab = $_GET['tab'];
@@ -224,33 +200,29 @@ class Facetly extends Module{
 
 					<label>'.$this->l('Consumer Key').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_consumer_key" value="'.Configuration::get('facetly_consumer_key').'" size="60" />
+						<input type="text" name="facetly_consumer_key" value="'.Configuration::get('facetly_consumer_key').'" size="60" /> ex: qhduafdh
 					</div>
-					<div class="description">ex: qhduafdh</div>
+					
 
 					<label>'.$this->l('Consumer Secret').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_consumer_secret" value="'.Configuration::get('facetly_consumer_secret').'" size="60" />
+						<input type="text" name="facetly_consumer_secret" value="'.Configuration::get('facetly_consumer_secret').'" size="60" /> ex: q5yvmddqntukobeoszi6zuqmwvy9wwsv
 					</div>
-					<div class="description">ex: q5yvmddqntukobeoszi6zuqmwvy9wwsv</div>
 
 					<label>'.$this->l('Server Name').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_server_name" value="'.Configuration::get('facetly_server_name').'" size="60" />
+						<input type="text" name="facetly_server_name" value="'.Configuration::get('facetly_server_name').'" size="60" /> ex: http://sg1.facetly.com/1
 					</div>
-					<div class="description">ex: http://sg1.facetly.com/1</div>
 
 					<label>'.$this->l('Search Limit Setting').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_search_limit" value="'.Configuration::get('facetly_search_limit').'" size="60" />
+						<input type="text" name="facetly_search_limit" value="'.Configuration::get('facetly_search_limit').'" size="60" /> ex: 5
 					</div>
-					<div class="description">ex: 5</div>
 					
 					<label>'.$this->l('Additional variable').'</label>
 					<div class="margin-form">
-						<input type="text" name="facetly_additional_variable" value="'.Configuration::get('facetly_additional_variable').'" size="60" />
+						<input type="text" name="facetly_additional_variable" value="'.Configuration::get('facetly_additional_variable').'" size="60" /> ex: _op[category]=or
 					</div>
-					<div class="description">ex: _op[category]=or</div>
 					
 					
 					<!--<label>'.$this->l('Override').'</label>
@@ -367,7 +339,6 @@ class Facetly extends Module{
 			';
 			
 			
-			//$facetly_page_template = facetly_configuration_decode(Configuration::get('facetly_page_template'));
 			$facetly_search_template = facetly_configuration_decode(Configuration::get('facetly_search_template'));
 			$facetly_facet_template = facetly_configuration_decode(Configuration::get('facetly_facet_template'));  
 			  
@@ -448,7 +419,6 @@ class Facetly extends Module{
 	  
 	public function search($params = array()){  
 		require_once("facetly_api.php");
-		//global $query;
 		$query = $params['query'];
 		if($query == NULL) $query = $_GET['query'];
 		$facetly = new facetly_api;
@@ -456,7 +426,6 @@ class Facetly extends Module{
 		$api_path = "search/product";
 		$api_method = "GET";
 		$consumer_key = Configuration::get('facetly_consumer_key');
-		//$uri = $_SERVER['REQUEST_URI'];
 		$add_var = Configuration::get('facetly_additional_variable');
 		$uri = "/modules/facetly/find.php?".$add_var;
 			
@@ -480,7 +449,6 @@ class Facetly extends Module{
 		Tools::addCSS(facetly_base_uri().'modules/facetly/css/facetly.css', 'all');
         Tools::addJS(
 						array(
-							//facetly_base_uri().'modules/facetly/javascript/jquery.js',
 							facetly_base_uri().'modules/facetly/config.js.php',
 							facetly_base_uri().'modules/facetly/js/jquery.autocomplete.js', 
 							facetly_base_uri().'modules/facetly/js/jquery.address.js',
@@ -493,11 +461,9 @@ class Facetly extends Module{
 	public function hookdeleteproduct($params){
 		print_r($params);
 		$id_product = (int)$params['product']->id;
-		//exit();
 	
 		facetly_del_temp($id_product);
 
-		//exit();
 	}
 	
 	public function hookupdateproduct($params){
