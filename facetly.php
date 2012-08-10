@@ -190,7 +190,7 @@ class Facetly extends Module{
 		
 		$this->_html .= '
 			<fieldset>
-				<h2>facetly Configuration</h2>
+				<h2>Facetly Configuration</h2>
 				<form action="'.$_SERVER['REQUEST_URI'].'" method="post" class="form-item">
 					<label>'.$this->l('Language').'</label>
 					<div class="margin-form">
