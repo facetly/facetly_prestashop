@@ -327,7 +327,7 @@ class Facetly extends Module{
 			
 			$this->_html .= '
 				<fieldset>
-					<h2>facetly Field</h2>
+					<h2>Facetly Field</h2>
 					<form action="'.$_SERVER['REQUEST_URI'].'" method="post">
 					'.
 						$map_facetly
@@ -399,7 +399,7 @@ class Facetly extends Module{
 		$facetly_block = '			
 				<div class="block"><h4>Search</h4>
 					<div class="block_content">
-						<form action="/modules/facetly/find.php" facetly_form="on" method="get">
+						<form action="'.__PS_BASE_URI__.'modules/facetly/find.php" facetly_form="on" method="get">
 							<input id="edit-query" type="text" facetly="on" name ="query" size ="15" value="'.$_GET['query'].'" />	
 							<input type="submit" value="Search" class="button" />
 							<input id="edit-limit" type="hidden" value="'.Configuration::get('facetly_search_limit').'" name="limit">
