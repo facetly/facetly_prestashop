@@ -67,15 +67,30 @@ class Facetly extends Module{
 	
 	public function getContent(){
 	    if (Tools::isSubmit('submitConfig')){
-			Configuration::updateValue('facetly_language', Tools::getValue('facetly_language'));
-			Configuration::updateValue('facetly_consumer_key', Tools::getValue('facetly_consumer_key'));
-			Configuration::updateValue('facetly_consumer_secret', Tools::getValue('facetly_consumer_secret'));
-			Configuration::updateValue('facetly_server_name', Tools::getValue('facetly_server_name'));
-			Configuration::updateValue('facetly_search_limit', Tools::getValue('facetly_search_limit'));
-			Configuration::updateValue('facetly_additional_variable', Tools::getValue('facetly_additional_variable'));
-			$this->_html .= '<div class="conf">
-								Configuration Saved
-							</div>';
+			$facetly_consumer_key = trim(Tools::getValue('facetly_consumer_key'));
+			$facetly_consumer_secret = trim(Tools::getValue('facetly_consumer_secret'));
+			$facetly_server_name = trim(Tools::getValue('facetly_server_name'));
+			$limit = (int)Tools::getValue('facetly_search_limit');
+			$add_var = trim(Tools::getValue('facetly_additional_variable'));
+			
+			if (!empty($facetly_consumer_key) && !empty($facetly_consumer_secret) && !empty($facetly_server_name)){	
+				Configuration::updateValue('facetly_language', Tools::getValue('facetly_language'));
+				Configuration::updateValue('facetly_consumer_key', $facetly_consumer_key);
+				Configuration::updateValue('facetly_consumer_secret', $facetly_consumer_secret);
+				Configuration::updateValue('facetly_server_name', $facetly_server_name);
+				Configuration::updateValue('facetly_search_limit', $limit);
+				Configuration::updateValue('facetly_additional_variable', $add_var);
+				$this->_html .= '<div class="conf">
+									Configuration Saved
+								</div>';
+
+			}
+			else{
+				$this->_html .= '<div class="error">
+									<img src="../img/admin/error2.png">
+									Please check your consumer key or consumer secret or server name.
+								</div>';
+			}			
 		}	
 			
 		if (Tools::isSubmit('submitTemplate')){		
@@ -381,12 +396,7 @@ class Facetly extends Module{
 				</fieldset>
 			  ';
 
-		}
-		  
-		  
-		  
-		  
-		  
+		}	  
 		  
 	}
 	  
