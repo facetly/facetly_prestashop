@@ -10,8 +10,8 @@
 var facetly = {
 	"key" : "<?php echo $consumer_key ?>",
 	"server" : "<?php echo $api_server ?>",
-	"file" : "modules/facetly/find.php?<?php echo $add_var ?>",
-	"baseurl" : "<?php echo __PS_BASE_URI__ ?>",
+	"file" : "find.php?<?php echo $add_var ?>",
+	"baseurl" : "<?php echo __PS_BASE_URI__ ?>modules/facetly/",
 	"limit" : <?php echo $limit ?>
 }
 				
