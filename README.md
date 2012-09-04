@@ -6,9 +6,17 @@ Install Prestashop Modules
 
 How to install Facetly Module in Prestashop
 
+1. Before Installing Facetly Module, make sure you already have these requirements:
+
 a. Any FTP program, such as WinSCP, FileZilla, etc.
 
 b. Prestashop 1.4.8 or higher (we are not guarantee facetly plugin would be work properly in previous version)
+
+2. Download Facetly Module from our site (https://github.com/facetly/facetly_prestashop) and rename folder into facetly then upload it to your module folder using FTP program.
+
+3. Activate Facetly Module in your modules list.
+
+4. After Facetly Module successfully installed in your Prestashop, you will find Facetly Configuration in your modules.
 
 Configure Facetly Module
 -------------
