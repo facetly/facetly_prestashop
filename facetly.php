@@ -418,15 +418,16 @@ class Facetly extends Module{
 							<input id="edit-limit" type="hidden" value="'.Configuration::get('facetly_search_limit').'" name="limit">
 						</form>
 					</div>	
-				</div>
-				<div class="block"><h4>Filter Results</h4>
+				</div>';
+				if (!empty($facetly_output->facets)) { 
+				$facetly_block .= '<div class="block"><h4>Filter Results</h4>
 					<div class="block_content">
 						<div id="facetly_facet">
 							'.$facetly_output->facets.'
 						</div>					
 					</div>
-				</div>
-				';
+				</div>';
+				}
 		return $facetly_block;
 	}
 	  
