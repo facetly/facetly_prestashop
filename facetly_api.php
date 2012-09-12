@@ -236,8 +236,6 @@ class facetly_api
             isset($parts['port'])?$parts['port']:80, 
             $errno, $errstr, 30);
 
-        //pete_assert(($fp!=0), "Couldn't open a socket to ".$url." (".$errstr.")");(optional)
-
         $out = "POST ".$parts['path']." HTTP/1.1\r\n";
         $out.= "Host: ".$parts['host']."\r\n";
         $out.= "Content-Type: application/x-www-form-urlencoded\r\n";

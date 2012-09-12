@@ -25,7 +25,6 @@
 	}
 	
 	function facetly_save_template($facetly_page_template, $facetly_search_template, $facetly_facet_template){
-		//Configuration::updateValue('facetly_page_template', facetly_configuration_encode($facetly_page_template));
 		Configuration::updateValue('facetly_search_template', facetly_configuration_encode($facetly_search_template));
 		Configuration::updateValue('facetly_facet_template', facetly_configuration_encode($facetly_facet_template));
 		
@@ -39,12 +38,9 @@
 					"tplsearch" => $facetly_search_template,
 					"tplfacet" => $facetly_facet_template,
 		);
-		
-		//print_r($post);
-		//exit();	
+
 		$Curl_Session = curl_init($path_server);
 		curl_setopt ($Curl_Session, CURLOPT_POST, 1);
-		//curl_setopt ($Curl_Session, CURLOPT_HEADER, TRUE);
 		curl_setopt ($Curl_Session, CURLOPT_POSTFIELDS, $post);
 		curl_setopt ($Curl_Session, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt ($Curl_Session, CURLOPT_RETURNTRANSFER, 1);
@@ -95,13 +91,11 @@
 				$mapping[$indeks]['depth'] = (int)$cats[$i]['level_depth'];		
 			}
 		}
-		//$id_cats=2;
 		for($id_cats = 1; $id_cats <= $looping; $id_cats++){
 			$chain_cats = NULL;
 			if($mapping[$id_cats]['depth'] >=1){
 				$deep = $mapping[$id_cats]['depth'];
 				$chain_cats = $mapping[$id_cats]['name'];
-				//printf($mapping[$id_cats]['name']);
 				$parents = $mapping[$id_cats]['id_parent'];
 				for($x=1;$x<=$deep;$x++){
 					if((int)$mapping[$parents]['id_parent'] == 0)break;
@@ -309,9 +303,7 @@
 	function facetly_reindex($page,$limit){
 		$start = $page;
 		require_once("facetly_api.php");
-		//$sampel = Product::getNewProducts((int)Configuration::get('facetly_language'), $page, $limit, false, 'id_product', 'DESC');
 		$sampel = facetly_load_group_product((int)Configuration::get('facetly_language'),$page,$limit);
-		//print_r($sampel);
 		$mapping_cats = facetly_prestashop_category_mapping();
 		$facetly = new facetly_api;
 		$api_server = Configuration::get('facetly_server_name');
@@ -368,11 +360,9 @@
 				"imageurl" => $url_image,
 				"created" => $created,
 			);
-			//print_r($api_data);
 			$facetly->setServer($api_server);
 			$api_output = $facetly->call($api_path, $api_data, $api_method);
 			$return = json_decode($api_output);
-			//print_r($return);
 		}
 	}
 	
@@ -387,8 +377,6 @@
 		$consumer_secret = Configuration::get('facetly_consumer_secret');
 		$api_path = "product/insert";
 		$api_method = "POST";
-		//print_r($product);
-		
 		$product = $product[0];
 		$id_product = $product['id_product'];
 			
@@ -435,8 +423,7 @@
 			"imageurl" => $url_image,
 			"created" => $created,
 		);
-		//print_r($product);
-		//	print_r($api_data);
+		
 		$facetly->setServer($api_server);
 		$api_output = $facetly->call($api_path, $api_data, $api_method);
 		$return = json_decode($api_output);
@@ -455,7 +442,7 @@
 		  "secret" => $consumer_secret,
 		  "id" => $id_product,
 		);
-		//print_r($api_data);
+		
 		$facetly->setServer($api_server);
 		$api_output = $facetly->call($api_path, $api_data, $api_method);
 		$return = json_decode($api_output);
