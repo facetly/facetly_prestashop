@@ -25,6 +25,7 @@
 	}
 	
 	function facetly_save_template($facetly_page_template, $facetly_search_template, $facetly_facet_template){
+
 		Configuration::updateValue('facetly_search_template', facetly_configuration_encode($facetly_search_template));
 		Configuration::updateValue('facetly_facet_template', facetly_configuration_encode($facetly_facet_template));
 		
@@ -38,7 +39,7 @@
 					"tplsearch" => $facetly_search_template,
 					"tplfacet" => $facetly_facet_template,
 		);
-
+			
 		$Curl_Session = curl_init($path_server);
 		curl_setopt ($Curl_Session, CURLOPT_POST, 1);
 		curl_setopt ($Curl_Session, CURLOPT_POSTFIELDS, $post);
@@ -78,7 +79,7 @@
 	}
 
 	function facetly_prestashop_category_mapping(){
-		$cats = Category::getCategories( (int)($cookie->id_lang), true, false  ) ;
+		$cats = Category::getCategories( (int)(Configuration::get('facetly_language')), true, false  ) ;
 		$looping = count($cats);
 		$defaultLanguage = (int)(Configuration::get('PS_LANG_DEFAULT'));
 
@@ -91,6 +92,7 @@
 				$mapping[$indeks]['depth'] = (int)$cats[$i]['level_depth'];		
 			}
 		}
+
 		for($id_cats = 1; $id_cats <= $looping; $id_cats++){
 			$chain_cats = NULL;
 			if($mapping[$id_cats]['depth'] >=1){
@@ -217,9 +219,12 @@
 				m.`name` AS manufacturer_name, 
 				DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY)) > 0 AS new,
 				(p.`price` * ((100 + (t.`rate`))/100)) AS orderprice, 
-				pa.id_product_attribute
+				pa.id_product_attribute,
+				GROUP_CONCAT(cp.id_category SEPARATOR ",") AS id_category
 			FROM 
 				`'._DB_PREFIX_.'product` p
+			LEFT JOIN `'._DB_PREFIX_.'category_product` cp
+					ON (p.`id_product` = cp.`id_product`)
 			LEFT JOIN 
 				`'._DB_PREFIX_.'product_lang` pl 
 					ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)($id_lang).')
@@ -245,6 +250,8 @@
 					ON (m.`id_manufacturer` = p.`id_manufacturer`)
 			WHERE 
 				p.`active` = 1 
+			GROUP BY
+				p.`id_product`
 			ORDER BY
 				p.`id_product`
 			LIMIT '.(int)($page * $limit).', '.(int)(($page+1) * $limit)
@@ -310,8 +317,7 @@
 		$consumer_key = Configuration::get('facetly_consumer_key');
 		$consumer_secret = Configuration::get('facetly_consumer_secret');
 		$api_path = "product/insert";
-		$api_method = "POST";
-		
+		$api_method = "POST";		
 		
 		for($i=0;$i<$limit;$i++){
 			$id_product = $sampel[$i]['id_product'];
@@ -324,11 +330,14 @@
 			$field_body = Configuration::get('facetly_field_body');
 			$body = $sampel[$i][$field_body];
 			
-			$id_category = $sampel[$i]['id_category_default'];
-			$chain_cats = $mapping_cats[$id_category]['chain_cats'];
+			$id_categories = explode(",",$sampel[$i]['id_category']);			
+			$chain_cats = array();
+			foreach ($id_categories as $id_category) {
+			  $chain_cats[] = $mapping_cats[$id_category]['chain_cats'];
+			}			
 			
 			$field_price = Configuration::get('facetly_field_price');
-			$price = $sampel[$i][$field_price];
+			$price = (float)$sampel[$i][$field_price];
 			
 			$url = facetly_base_uri()."product.php?id_product=".$id_product;
 			
@@ -347,7 +356,8 @@
 			}
 			$field_created = Configuration::get('facetly_field_created');
 			$created = strtotime($sampel[$i][$field_created])*1000;
-
+			$created = number_format($created,0,'','');			
+			
 			$api_data = array(
 				"key" => $consumer_key,
 				"secret" => $consumer_secret,
@@ -377,6 +387,7 @@
 		$consumer_secret = Configuration::get('facetly_consumer_secret');
 		$api_path = "product/insert";
 		$api_method = "POST";
+		
 		$product = $product[0];
 		$id_product = $product['id_product'];
 			
@@ -410,6 +421,7 @@
 			
 		$field_created = Configuration::get('facetly_field_created');
 		$created = strtotime($product[$field_created])*1000;
+		$created = number_format($created,2,'.','');
 			
 		$api_data = array(
 			"key" => $consumer_key,
@@ -423,7 +435,7 @@
 			"imageurl" => $url_image,
 			"created" => $created,
 		);
-		
+
 		$facetly->setServer($api_server);
 		$api_output = $facetly->call($api_path, $api_data, $api_method);
 		$return = json_decode($api_output);
@@ -442,7 +454,6 @@
 		  "secret" => $consumer_secret,
 		  "id" => $id_product,
 		);
-		
 		$facetly->setServer($api_server);
 		$api_output = $facetly->call($api_path, $api_data, $api_method);
 		$return = json_decode($api_output);

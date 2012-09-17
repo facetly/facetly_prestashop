@@ -334,6 +334,11 @@ class Facetly extends Module{
 					$map_facetly .= '<option value= "large" '.$select_large.'>Large</option>';
 					$map_facetly .= '<option value= "thickbox" '.$select_thickbox.'>Thickbox</option>';
 					$map_facetly .= '</select><br /><br />';
+				} else {
+					$map_facetly .= '<label>'.$this->l($label_config).'</label>';
+					$map_facetly .= '<select name="'.$config_name.'">';
+					$map_facetly .= '</select><br /><br />';
+				
 				}
 				
 				
@@ -356,7 +361,30 @@ class Facetly extends Module{
 			
 			$facetly_search_template = facetly_configuration_decode(Configuration::get('facetly_search_template'));
 			$facetly_facet_template = facetly_configuration_decode(Configuration::get('facetly_facet_template'));  
-			  
+			if($facetly_search_template == NULL || $facetly_facet_template == NULL){
+				require_once("facetly_api.php");
+				$facetly = new facetly_api;
+				$consumer_secret = strtolower(Configuration::get('facetly_consumer_secret'));
+				$consumer_key = strtolower(Configuration::get('facetly_consumer_key'));
+				$api_server = Configuration::get('facetly_server_name');
+				$api_path = "template/select";
+				$api_method = "POST";
+				$api_data = array(
+				  "key" => $consumer_key,
+				  "secret" => $consumer_secret,
+				);
+				$facetly->setServer($api_server);
+				$api_output = $facetly->call($api_path, $api_data, $api_method);
+				$return = json_decode($api_output);
+				
+				if($facetly_facet_template == NULL){
+					$facetly_facet_template = $return->tplfacet;
+				}
+				if($facetly_search_template == NULL){
+					$facetly_search_template = $return->tplsearch;
+				}	
+			}
+			
 			$this->_html .= '
 				<fieldset>
 					<h2>Template Configuration</h2>
